@@ -13,7 +13,17 @@ import (
 var sizeCount int64 = 0
 
 func main() {
-	filepath.WalkDir("./node_modules", cleanUp)
+	cleanUpNodeModules("./node_modules")
+}
+
+func cleanUpNodeModules(dirPath string) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Failed to clean node_modules")
+		}
+	}()
+	err := filepath.WalkDir(dirPath, cleanUp)
+	fmt.Errorf("Error cleaning up node_modules: ", err)
 	fmt.Printf("Total delete size: %sB \n", bytefmt.ByteSize(uint64(sizeCount)))
 }
 
@@ -58,9 +68,10 @@ func cleanUp(path string, d fs.DirEntry, err error) error {
 				return nil
 			}
 			sizeCount = sizeCount + info.Size()
-			deleteFile(path)
+			// deleteFile(path)
 		}
 	}
+	fmt.Printf("%s\n", path)
 	return nil
 }
 
