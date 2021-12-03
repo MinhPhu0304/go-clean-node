@@ -68,7 +68,7 @@ func cleanUp(path string, d fs.DirEntry, err error) error {
 				return nil
 			}
 			sizeCount = sizeCount + info.Size()
-			// deleteFile(path)
+			deleteFile(path)
 		}
 	}
 	fmt.Printf("%s\n", path)
