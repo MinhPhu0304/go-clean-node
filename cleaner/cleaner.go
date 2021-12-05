@@ -62,8 +62,13 @@ func (c *Cleaner) StartClean() {
 		}
 	}()
 	err := filepath.WalkDir(c.path, c.cleanUp)
-	fmt.Errorf("Error cleaning up node_modules: ", err)
-	fmt.Printf("Total delete size: %sB \n", bytefmt.ByteSize(uint64(c.sizeCount)))
+	if err != nil {
+		fmt.Printf("%v", fmt.Errorf("Error cleaning up node_modules: ", err))
+	} else if c.dryRun {
+		fmt.Println("\nDry run complete\nPass --dryrun=false to delete these files")
+	} else {
+		fmt.Printf("Total delete size: %sB \n", bytefmt.ByteSize(uint64(c.sizeCount)))
+	}
 }
 
 func (c *Cleaner) cleanUp(path string, d fs.DirEntry, err error) error {
