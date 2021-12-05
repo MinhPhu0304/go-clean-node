@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"code.cloudfoundry.org/bytefmt"
+	"github.com/dustin/go-humanize"
 )
 
 type Cleaner struct {
@@ -69,7 +69,7 @@ func (c *Cleaner) StartClean() {
 	} else if c.dryRun {
 		fmt.Println("\nDry run complete\nPass --dryrun=false to delete these files")
 	} else {
-		fmt.Printf("Total delete size: %sB \n", bytefmt.ByteSize(uint64(c.sizeCount)))
+		fmt.Printf("Total delete size: %sB \n", humanize.Bytes(uint64(c.sizeCount)))
 	}
 }
 
