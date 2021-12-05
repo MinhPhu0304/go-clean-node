@@ -13,6 +13,7 @@ import (
 type Cleaner struct {
 	dryRun    bool
 	path      string
+	verbose   bool
 	sizeCount int64
 }
 
@@ -48,10 +49,11 @@ var junkFiles = []string{
 	".vscode",
 }
 
-func NewCleaner(dryRun bool, path string) Cleaner {
+func NewCleaner(dryRun bool, path string, verbose bool) Cleaner {
 	return Cleaner{
-		dryRun: dryRun,
-		path:   path,
+		dryRun:  dryRun,
+		path:    path,
+		verbose: verbose,
 	}
 }
 
@@ -87,15 +89,17 @@ func (c *Cleaner) cleanUp(path string, d fs.DirEntry, err error) error {
 			if c.dryRun {
 				fmt.Printf("Clean file %s\n", path)
 			} else {
-				deleteFile(path)
+				c.deleteFile(path)
 			}
 		}
 	}
-	// fmt.Printf("%s\n", path)
 	return nil
 }
 
-func deleteFile(path string) {
+func (c *Cleaner) deleteFile(path string) {
+	if c.verbose {
+		fmt.Printf("Deletef file with path %s\n", path)
+	}
 	err := os.Remove(path)
 	if err != nil {
 		fmt.Println(err)
